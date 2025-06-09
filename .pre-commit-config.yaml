@@ -1,0 +1,40 @@
+repos:
+-   repo: local
+    hooks:
+        - id: ruff
+          name: ruff format
+          entry: "ruff format"
+          language: python
+          language_version: python3.11
+          types: [ python ]
+          require_serial: true
+          verbose: true
+-   repo: local
+    hooks:
+        - id: ruff
+          name: ruff check
+          entry: "ruff check"
+          language: python
+          language_version: python3.11
+          types: [ python ]
+          require_serial: true
+          verbose: true
+-   repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.12.0
+    hooks:
+        - id: reorder-python-imports
+-   repo: https://github.com/MarcoGorelli/absolufy-imports
+    rev: v0.3.1
+    hooks:
+        - id: absolufy-imports
+-   repo: local
+    hooks:
+        - id: mypy
+          name: mypy
+          entry: "mypy"
+          language: python
+          language_version: python3.11
+          types: [ python ]
+          require_serial: true
+          verbose: true
+          args: ["--strict"]
