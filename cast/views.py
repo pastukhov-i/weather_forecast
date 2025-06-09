@@ -52,19 +52,26 @@ class CurrentWeatherAPIView(APIView):
 
 
 class ForecastWeatherAPIView(APIView):
+    """
+    API для получения прогноза и его сохранения
+    """
+
     def get(self, request: Request) -> JsonResponse:
         query = CityAndDateQuerySerializer(data=request.query_params)
         query.is_valid(raise_exception=True)
         city = query.validated_data["city"]
         date = query.validated_data["date"]
 
+        # Получаем данные о прогнозе
         try:
+            # Пробуем получить прогноз из бд
             forecast_obj = self._get_forecast_data_from_db(city, date)
             response_data = self._create_response_data_for_forecast(
                 min_temp=forecast_obj.min_temperature,
                 max_temp=forecast_obj.max_temperature,
             )
         except Forecast.DoesNotExist:
+            # При неудаче отправляется запрос на API сервиса погоды
             try:
                 forecast_info = self._get_forecast_data_from_api(city, date)
             except WeatherAPIRequestError as e:
@@ -86,6 +93,10 @@ class ForecastWeatherAPIView(APIView):
 
     @staticmethod
     def _get_forecast_data_from_db(city: str, date: str) -> Forecast:
+        """
+        Функция для получения объекта с прогнозом из бд
+        """
+
         forecast = (
             Forecast.objects.filter(
                 city=city, date=datetime.datetime.strptime(date, "%d.%m.%Y")
@@ -101,6 +112,10 @@ class ForecastWeatherAPIView(APIView):
 
     @staticmethod
     def _get_forecast_data_from_api(city: str, date: str) -> dict[str, Any]:
+        """
+        Функция для обращения на API сервиса погоды
+        """
+
         forecast_data = get_forecast_data(city, date)
         if forecast_data.status != status.HTTP_200_OK:
             raise WeatherAPIRequestError(
@@ -116,6 +131,10 @@ class ForecastWeatherAPIView(APIView):
     def _create_response_data_for_forecast(
         min_temp: float, max_temp: float
     ) -> dict[str, Any]:
+        """
+        Функция для создания ответа API
+        """
+
         response_serializer = ForecastResponseSerializer(
             data={
                 "min_temperature": min_temp,
