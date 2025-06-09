@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  django-app:
+    build: .
+    container_name: django-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

@@ -30,3 +30,5 @@ types-requests==2.32.0.20250602
 typing_extensions==4.14.0
 urllib3==2.4.0
 virtualenv==20.31.2
+gunicorn
+psycopg2-binary
