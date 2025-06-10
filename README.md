@@ -13,7 +13,7 @@
 *Query-параметры:*
  - city (обязательный) — название города на английском языке (например: Moscow, Amsterdam)
 
-**2. GET `/api/weather/forecast`**
+**2. GET /api/weather/forecast**
 
 *Назначение:*
 
@@ -45,4 +45,5 @@
 
 ```
 docker compose up -d --build
+docker compose run django-app ./manage.py migrate
 ```
